@@ -1,10 +1,13 @@
 // src/components/Navbar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Camera } from "lucide-react";
+import { Menu, X, Camera, MessageCircle } from "lucide-react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+
+  // Check if user is logged in
+  const isLoggedIn = localStorage.getItem("user"); // replace with your login logic
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -12,7 +15,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-xl font-bold text-orange-600">
           <Camera className="h-6 w-6" />
-          CCTV Store
+          SafeVision
         </Link>
 
         {/* Desktop Links */}
@@ -24,14 +27,35 @@ export default function Navbar() {
           <Link to="/contact" className="hover:text-orange-600 transition">Contact</Link>
         </div>
 
-        {/* Action Button */}
-        <div className="hidden md:block">
-          <Link
-            to="/shop"
-            className="bg-orange-600 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition"
+        {/* Action Buttons */}
+        <div className="hidden md:flex items-center gap-4">
+          {/* WhatsApp Chat Button */}
+          <a
+            href="https://wa.me/918766308674"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition"
           >
-            Shop Now
-          </Link>
+            <MessageCircle className="h-5 w-5" />
+            Chat
+          </a>
+
+          {/* Shop Now Button (Conditional) */}
+          {isLoggedIn ? (
+            <Link
+              to="/products"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition"
+            >
+              Shop Now
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition"
+            >
+              Login to Shop
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -51,17 +75,39 @@ export default function Navbar() {
           <Link to="/services" className="hover:text-orange-600" onClick={() => setOpen(false)}>Services</Link>
           <Link to="/about" className="hover:text-orange-600" onClick={() => setOpen(false)}>About</Link>
           <Link to="/contact" className="hover:text-orange-600" onClick={() => setOpen(false)}>Contact</Link>
-          <Link
-            to="/shop"
-            className="bg-orange-600 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition text-center"
+
+          {/* WhatsApp Chat Button */}
+          <a
+            href="https://wa.me/918766308674"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition text-center"
             onClick={() => setOpen(false)}
           >
-            Shop Now
-          </Link>
+            <MessageCircle className="h-5 w-5" />
+            Chat
+          </a>
+
+          {/* Shop Now Button (Conditional) */}
+          {isLoggedIn ? (
+            <Link
+              to="/products"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition text-center"
+              onClick={() => setOpen(false)}
+            >
+              Shop Now
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg shadow hover:bg-orange-700 transition text-center"
+              onClick={() => setOpen(false)}
+            >
+              Login to Shop
+            </Link>
+          )}
         </div>
       )}
     </nav>
   );
 }
-
-

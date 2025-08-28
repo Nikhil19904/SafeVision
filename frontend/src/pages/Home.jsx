@@ -1,7 +1,7 @@
 import HeroSlider from "../components/HeroSlider";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
-
+import CCTVInstallation from "../components/CCTVInstallations";
 // Inline Testimonials component
 const Testimonials = () => {
   const testimonials = [
@@ -137,6 +137,7 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <Testimonials />
+      <CCTVInstallation />
 
       {/* Call To Action Section */}
       <section className="py-16 bg-indigo-600 text-white text-center">
