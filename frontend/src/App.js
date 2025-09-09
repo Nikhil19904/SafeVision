@@ -12,6 +12,7 @@ import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
 import Products from "./pages/Products";
+import GalleryPage from "./pages/GalleryPage";
 import PaymentSelectionPage from "./pages/PaymentSelectionPage";
 import PaymentProcessingPage from "./pages/PaymentProcessingPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
@@ -39,6 +40,7 @@ function App() {
             <Route path="/payment-selection" element={<PaymentSelectionPage />} />
   <Route path="/payment-processing" element={<PaymentProcessingPage />} />
   <Route path="/payment-success" element={<PaymentSuccessPage />} />
+    <Route path="/gallery" element={<GalleryPage />} />
   <Route path="/payment-failure" element={<PaymentFailurePage />} />
   <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
        

@@ -22,6 +22,7 @@ export default function Navbar() {
         <div className="hidden md:flex gap-8 text-gray-700 font-medium">
           <Link to="/" className="hover:text-orange-600 transition">Home</Link>
           <Link to="/products" className="hover:text-orange-600 transition">Products</Link>
+          <Link to="/gallery" className="hover:text-orange-600 transition">Gallery</Link>
           <Link to="/services" className="hover:text-orange-600 transition">Services</Link>
           <Link to="/about" className="hover:text-orange-600 transition">About</Link>
           <Link to="/contact" className="hover:text-orange-600 transition">Contact</Link>
@@ -71,9 +72,10 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-white shadow-md flex flex-col gap-4 px-6 py-4">
           <Link to="/" className="hover:text-orange-600" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/products" className="hover:text-orange-600" onClick={() => setOpen(false)}>Products</Link>
           <Link to="/services" className="hover:text-orange-600" onClick={() => setOpen(false)}>Services</Link>
           <Link to="/about" className="hover:text-orange-600" onClick={() => setOpen(false)}>About</Link>
+           <Link to="/products" className="hover:text-orange-600" onClick={() => setOpen(false)}>Gallery</Link>
+          <Link to="/products" className="hover:text-orange-600" onClick={() => setOpen(false)}>Products</Link>
           <Link to="/contact" className="hover:text-orange-600" onClick={() => setOpen(false)}>Contact</Link>
 
           {/* WhatsApp Chat Button */}
