@@ -1,15 +1,17 @@
-// src/models/contactModel.js
-const db = require("../db/db");
+const pool = require("../db");
 
 const Contact = {
-  create: (data, callback) => {
-    const { name, email, phone, message } = data;
-    const sql = "INSERT INTO contacts (name, email, phone, message) VALUES (?, ?, ?, ?)";
-    db.query(sql, [name, email, phone, message], callback);
+  create: async ({ name, email, phone, message }) => {
+    const [result] = await pool.query(
+      "INSERT INTO contacts (name, email, phone, message) VALUES (?, ?, ?, ?)",
+      [name, email, phone, message]
+    );
+    return result;
   },
-  getAll: (callback) => {
-    db.query("SELECT * FROM contacts ORDER BY created_at DESC", callback);
-  }
+  getAll: async () => {
+    const [rows] = await pool.query("SELECT * FROM contacts ORDER BY id DESC");
+    return rows;
+  },
 };
 
 module.exports = Contact;
