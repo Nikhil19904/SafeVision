@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+
 // Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -11,6 +12,7 @@ import Contact from "./pages/Contact";
 import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
+import Profile from "./pages/profile";
 import Products from "./pages/Products";
 import GalleryPage from "./pages/GalleryPage";
 import PaymentSelectionPage from "./pages/PaymentSelectionPage";
@@ -35,6 +37,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />{/* Contact Page */}
             <Route path="/services" element={<Services />} />{/* Services Page */}
             <Route path="/signup" element={<Signup />} />  {/* Signup Page */}
+            <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<Login />} />
             <Route path="/login" element={<Login />} />    {/* Login Page */}
             <Route path="/products" element={<Products />} />
             <Route path="/payment-selection" element={<PaymentSelectionPage />} />
