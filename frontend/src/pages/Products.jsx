@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext"; // 👈 Global Cart Context
 
 // Product Data with MRP & discount
 const productsData = [
@@ -69,8 +70,9 @@ const ratings = [5, 4, 3, 2, 1];
 
 export default function Products() {
   const [wishlist, setWishlist] = useState([]);
-  const [cart, setCart] = useState([]);
+  // const [cart, setCart] = useState([]);
   const [quickView, setQuickView] = useState(null);
+   const { addToCart } = useCart(); // 👈 useCart hook
 
   // Filters
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -87,11 +89,11 @@ export default function Products() {
     );
   };
 
-  const addToCart = (product) => {
-    if (!cart.find((item) => item.id === product.id)) {
-      setCart([...cart, product]);
-    }
-  };
+  // const addToCart = (product) => {
+  //   if (!cart.find((item) => item.id === product.id)) {
+  //     setCart([...cart, product]);
+  //   }
+  // };
 
   // Apply filters
   const filteredProducts = productsData.filter((p) => {
@@ -228,7 +230,7 @@ export default function Products() {
                     />
                   </button>
                   <button
-                    onClick={() => setQuickView(product)}
+                    onClick={() => addToCart(product)}
                     className="bg-white p-2 rounded-full shadow hover:scale-110 transition"
                   >
                     <Eye size={18} className="text-gray-600" />
