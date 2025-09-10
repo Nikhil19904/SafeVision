@@ -14,6 +14,7 @@ export default function Footer() {
             Secure your home and business with our advanced CCTV solutions.  
             24/7 monitoring, AI-powered safety, and smart surveillance.
           </p>
+
           <div className="flex space-x-4">
             <a href="#" className="hover:text-orange-500"><Facebook /></a>
             <a href="#" className="hover:text-orange-500"><Instagram /></a>
@@ -64,8 +65,17 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Make in India Logo */}
+      <div className="flex justify-center mt-8">
+        <img 
+          src="/make-in-india.png"   // 👈 yaha apne `public` folder me image ka naam daal dena
+          alt="Make in India"
+          className="h-16 object-contain"
+        />
+      </div>
+
       {/* Bottom Bar */}
-      <div className="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500">
+      <div className="border-t border-gray-700 mt-6 pt-4 text-center text-gray-500">
         © {new Date().getFullYear()} SafeVision. All rights reserved.
       </div>
     </footer>
