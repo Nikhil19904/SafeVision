@@ -6,7 +6,7 @@ export default function OrderSuccess() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center px-4 py-10">
       {/* ✅ Checkout Stepper */}
-      <CheckoutStepper currentStep={4} />
+      <CheckoutStepper currentStep={5} />
 
       <div className="bg-white shadow-md rounded-lg w-full max-w-lg p-8 text-center space-y-6">
         {/* Success Icon */}

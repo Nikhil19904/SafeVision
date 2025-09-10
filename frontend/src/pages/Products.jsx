@@ -1,10 +1,36 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, ShoppingCart, Eye } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // 👈 Global Cart Context
+import { useCart } from "../context/CartContext";
 
-// Product Data with MRP & discount
+// Countdown Hook
+function useCountdown(endTime) {
+  const [timeLeft, setTimeLeft] = useState({
+    total: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useState(() => {
+    if (!endTime) return;
+    const interval = setInterval(() => {
+      const total = Math.max(0, Math.floor((new Date(endTime) - new Date()) / 1000));
+      const hours = Math.floor(total / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      const seconds = total % 60;
+      setTimeLeft({ total, hours, minutes, seconds });
+      if (total <= 0) clearInterval(interval);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [endTime]);
+
+  return timeLeft;
+}
+
+// Sample Products with dealEndTime
 const productsData = [
   {
     id: 1,
@@ -19,6 +45,7 @@ const productsData = [
     inStock: true,
     image:
       "https://images.unsplash.com/photo-1606813903082-3d74e1b15d9f?auto=format&fit=crop&w=500&q=80",
+    dealEndTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000), // 2 hours from now
   },
   {
     id: 2,
@@ -33,6 +60,7 @@ const productsData = [
     inStock: true,
     image:
       "https://images.unsplash.com/photo-1625241097037-b12221e75d2b?auto=format&fit=crop&w=500&q=80",
+    dealEndTime: null,
   },
   {
     id: 3,
@@ -47,6 +75,7 @@ const productsData = [
     inStock: false,
     image:
       "https://images.unsplash.com/photo-1602526216861-4ee64f0e1e48?auto=format&fit=crop&w=500&q=80",
+    dealEndTime: null,
   },
   {
     id: 4,
@@ -61,6 +90,7 @@ const productsData = [
     inStock: true,
     image:
       "https://images.unsplash.com/photo-1623041440206-055482e0f33c?auto=format&fit=crop&w=500&q=80",
+    dealEndTime: new Date(new Date().getTime() + 30 * 60 * 1000), // 30 min deal
   },
 ];
 
@@ -68,34 +98,107 @@ const categories = ["All", "Camera", "Wires", "DoorLock"];
 const brands = ["All", "SecureCam", "EyeSafe", "WireMax", "SafeHome"];
 const ratings = [5, 4, 3, 2, 1];
 
-export default function Products() {
-  const [wishlist, setWishlist] = useState([]);
-  // const [cart, setCart] = useState([]);
-  const [quickView, setQuickView] = useState(null);
-   const { addToCart } = useCart(); // 👈 useCart hook
+// Product Card Component
+function ProductCard({ product, addToCart, navigate }) {
+  const timeLeft = useCountdown(product.dealEndTime);
+  const dealActive = product.dealEndTime && timeLeft.total > 0;
 
-  // Filters
+  return (
+    <motion.div
+      key={product.id}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="bg-white border rounded-lg shadow-sm hover:shadow-md transition p-4 flex flex-col relative"
+    >
+      {/* Discount Badge */}
+      {product.discount > 0 && (
+        <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+          {product.discount}% OFF
+        </span>
+      )}
+
+      {/* Flash Sale Badge */}
+      {dealActive && (
+        <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+          🔥 Hot Deal
+        </span>
+      )}
+
+      {/* Countdown Timer */}
+      {dealActive && (
+        <div className="absolute bottom-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+          Deal ends in {String(timeLeft.hours).padStart(2, "0")}:
+          {String(timeLeft.minutes).padStart(2, "0")}:
+          {String(timeLeft.seconds).padStart(2, "0")}
+        </div>
+      )}
+
+      {/* Image */}
+      <div className="flex justify-center mb-3">
+        <img src={product.image} alt={product.name} className="h-40 object-contain" />
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 text-left">
+        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-1">
+          {product.name}
+        </h3>
+        <p className="text-xs text-gray-500 mb-1">Brand: {product.brand}</p>
+        <div className="flex items-center text-yellow-500 text-sm mb-2">
+          {"★".repeat(product.rating)}
+          {"☆".repeat(5 - product.rating)}
+        </div>
+        <div className="mb-2">
+          <span
+            className={`text-lg font-bold mr-2 ${
+              dealActive ? "text-red-600" : "text-indigo-700"
+            }`}
+          >
+            ₹{product.price.toLocaleString()}
+          </span>
+          {dealActive && (
+            <span className="text-sm line-through text-gray-500">
+              ₹{product.mrp.toLocaleString()}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => addToCart(product)}
+          className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-md text-sm font-semibold transition ${
+            dealActive
+              ? "bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg animate-pulse"
+              : "bg-yellow-400 hover:bg-yellow-500 text-black"
+          }`}
+        >
+          <ShoppingCart size={16} /> Add to Cart
+        </button>
+        <button
+          onClick={() => navigate("/payment-selection", { state: { product } })}
+          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md text-sm font-semibold transition"
+        >
+          Buy Now
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Products Page
+export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [selectedRating, setSelectedRating] = useState(0);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [inStockOnly, setInStockOnly] = useState(false);
-
+  const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  const toggleWishlist = (id) => {
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  // const addToCart = (product) => {
-  //   if (!cart.find((item) => item.id === product.id)) {
-  //     setCart([...cart, product]);
-  //   }
-  // };
-
-  // Apply filters
   const filteredProducts = productsData.filter((p) => {
     const matchCategory = selectedCategory === "All" || p.category === selectedCategory;
     const matchBrand = selectedBrand === "All" || p.brand === selectedBrand;
@@ -117,53 +220,33 @@ export default function Products() {
           {/* Sidebar Filters */}
           <aside className="w-full md:w-1/4 bg-white rounded-lg p-5 shadow-sm space-y-6 text-left">
             <h2 className="text-lg font-bold text-gray-800 mb-4">Filters</h2>
-
-            {/* Category */}
             <div>
               <h3 className="text-sm font-semibold mb-2">Category</h3>
               {categories.map((cat) => (
                 <label key={cat} className="flex items-center gap-2 text-sm mb-1 cursor-pointer">
-                  <input
-                    type="radio"
-                    checked={selectedCategory === cat}
-                    onChange={() => setSelectedCategory(cat)}
-                  />
+                  <input type="radio" checked={selectedCategory === cat} onChange={() => setSelectedCategory(cat)} />
                   {cat}
                 </label>
               ))}
             </div>
-
-            {/* Brand */}
             <div>
               <h3 className="text-sm font-semibold mb-2">Brand</h3>
               {brands.map((b) => (
                 <label key={b} className="flex items-center gap-2 text-sm mb-1 cursor-pointer">
-                  <input
-                    type="radio"
-                    checked={selectedBrand === b}
-                    onChange={() => setSelectedBrand(b)}
-                  />
+                  <input type="radio" checked={selectedBrand === b} onChange={() => setSelectedBrand(b)} />
                   {b}
                 </label>
               ))}
             </div>
-
-            {/* Rating */}
             <div>
-              <h3 className="text-sm font-semibold mb-2">Customer Rating</h3>
+              <h3 className="text-sm font-semibold mb-2">Rating</h3>
               {ratings.map((r) => (
                 <label key={r} className="flex items-center gap-2 text-sm mb-1 cursor-pointer">
-                  <input
-                    type="radio"
-                    checked={selectedRating === r}
-                    onChange={() => setSelectedRating(r)}
-                  />
+                  <input type="radio" checked={selectedRating === r} onChange={() => setSelectedRating(r)} />
                   {"★".repeat(r)} & Up
                 </label>
               ))}
             </div>
-
-            {/* Price */}
             <div>
               <h3 className="text-sm font-semibold mb-2">Price</h3>
               <input
@@ -176,16 +259,10 @@ export default function Products() {
               />
               <p className="text-xs text-gray-600 mt-1">Up to ₹{priceRange[1]}</p>
             </div>
-
-            {/* Availability */}
             <div>
               <h3 className="text-sm font-semibold mb-2">Availability</h3>
               <label className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={inStockOnly}
-                  onChange={(e) => setInStockOnly(e.target.checked)}
-                />
+                <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
                 In Stock Only
               </label>
             </div>
@@ -194,163 +271,14 @@ export default function Products() {
           {/* Products Grid */}
           <div className="flex-1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProducts.length === 0 && (
-              <p className="text-gray-500 col-span-full text-center">
-                No products match your filters.
-              </p>
+              <p className="text-gray-500 col-span-full text-center">No products match your filters.</p>
             )}
-            {filteredProducts.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white border rounded-lg shadow-sm hover:shadow-md transition p-4 flex flex-col relative"
-              >
-                {/* Discount Badge */}
-                {product.discount > 0 && (
-                  <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                    {product.discount}% OFF
-                  </span>
-                )}
-
-                {/* Wishlist + Quick View */}
-                <div className="absolute top-3 right-3 flex gap-2">
-                  <button
-                    onClick={() => toggleWishlist(product.id)}
-                    className="bg-white p-2 rounded-full shadow hover:scale-110 transition"
-                  >
-                    <Heart
-                      size={18}
-                      className={`${
-                        wishlist.includes(product.id)
-                          ? "text-red-500 fill-red-500"
-                          : "text-gray-600"
-                      }`}
-                    />
-                  </button>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="bg-white p-2 rounded-full shadow hover:scale-110 transition"
-                  >
-                    <Eye size={18} className="text-gray-600" />
-                  </button>
-                </div>
-
-                {/* Image */}
-                <div className="flex justify-center mb-3">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-40 object-contain"
-                  />
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 text-left">
-                  <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-1">
-                    {product.name}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-1">Brand: {product.brand}</p>
-
-                  <div className="flex items-center text-yellow-500 text-sm mb-2">
-                    {"★".repeat(product.rating)}
-                    {"☆".repeat(5 - product.rating)}
-                  </div>
-
-                  <div className="mb-2">
-                    <span className="text-lg font-bold text-indigo-700 mr-2">
-                      ₹{product.price.toLocaleString()}
-                    </span>
-                    <span className="text-sm line-through text-gray-500">
-                      ₹{product.mrp.toLocaleString()}
-                    </span>
-                  </div>
-
-                  <ul className="text-xs text-gray-600 space-y-1 mb-3">
-                    <li>✅ Free Delivery Tomorrow</li>
-                    <li>✅ Cash on Delivery Available</li>
-                    <li>✅ Warranty: 1 Year</li>
-                  </ul>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="flex-1 flex items-center justify-center gap-1 bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-md text-sm font-semibold transition"
-                  >
-                    <ShoppingCart size={16} /> Add to Cart
-                  </button>
-                  <button
-                    onClick={() =>
-                      navigate("/payment-selection", { state: { product } })
-                    }
-                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md text-sm font-semibold transition"
-                  >
-                    Buy Now
-                  </button>
-                </div>
-              </motion.div>
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} addToCart={addToCart} navigate={navigate} />
             ))}
           </div>
         </div>
       </div>
-
-      {/* Quick View Modal */}
-      {quickView && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white w-96 rounded-lg p-6 shadow-lg relative">
-            <button
-              onClick={() => setQuickView(null)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-black"
-            >
-              ✕
-            </button>
-            <img
-              src={quickView.image}
-              alt={quickView.name}
-              className="w-full h-48 object-contain mb-4"
-            />
-            <h2 className="text-lg font-bold mb-2">{quickView.name}</h2>
-            <p className="text-sm text-gray-600 mb-1">Brand: {quickView.brand}</p>
-            <p className="text-sm mb-2">Type: {quickView.type}</p>
-            <div className="flex items-center text-yellow-500 text-sm mb-2">
-              {"★".repeat(quickView.rating)}
-              {"☆".repeat(5 - quickView.rating)}
-            </div>
-            <div className="mb-2">
-              <span className="text-lg font-bold text-indigo-700 mr-2">
-                ₹{quickView.price.toLocaleString()}
-              </span>
-              <span className="text-sm line-through text-gray-500">
-                ₹{quickView.mrp.toLocaleString()}
-              </span>
-            </div>
-            <ul className="text-xs text-gray-600 space-y-1 mb-3">
-              <li>✅ Free Delivery Tomorrow</li>
-              <li>✅ Cash on Delivery Available</li>
-              <li>✅ Warranty: 1 Year</li>
-            </ul>
-            <div className="flex gap-2">
-              <button
-                onClick={() => addToCart(quickView)}
-                className="flex-1 flex items-center justify-center gap-1 bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-md text-sm font-semibold transition"
-              >
-                <ShoppingCart size={16} /> Add to Cart
-              </button>
-              <button
-                onClick={() =>
-                  navigate("/payment-selection", { state: { product: quickView } })
-                }
-                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md text-sm font-semibold transition"
-              >
-                Buy Now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
