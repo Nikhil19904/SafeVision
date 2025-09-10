@@ -15,6 +15,10 @@ import Signup from "./pages/SignUp";
 import Profile from "./pages/profile";
 import Products from "./pages/Products";
 import GalleryPage from "./pages/GalleryPage";
+import AddressSelection from "./pages/AddressSelection";
+// import PaymentSelection from "./PaymentSelection";
+import ReviewOrder from "./pages/ReviewOrder";
+import OrderSuccess from "./pages/OrderSuccess";
 import PaymentSelectionPage from "./pages/PaymentSelectionPage";
 import PaymentProcessingPage from "./pages/PaymentProcessingPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
@@ -40,6 +44,10 @@ function App() {
             <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<Login />} />
             <Route path="/login" element={<Login />} />    {/* Login Page */}
+             <Route path="/address-selection" element={<AddressSelection />} />
+        {/* <Route path="/payment-selection" element={<PaymentSelection />} /> */}
+        <Route path="/review-order" element={<ReviewOrder />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="/products" element={<Products />} />
             <Route path="/payment-selection" element={<PaymentSelectionPage />} />
   <Route path="/payment-processing" element={<PaymentProcessingPage />} />

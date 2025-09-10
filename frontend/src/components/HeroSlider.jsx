@@ -3,35 +3,42 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 const slides = [
   {
     id: 1,
     title: "Next-Gen CCTV Solutions",
-    desc: "Protect your home and business with our smart, reliable & affordable security systems.",
+    desc: "Protect your home and business with our smart, reliable & affordable surveillance systems.",
     btnText: "Shop Now",
-    img: "https://picsum.photos/id/1011/1920/1080",
+    img: "https://images.unsplash.com/photo-1594909122845-11baa439b7a7?auto=format&fit=crop&w=1920&q=80",
   },
   {
     id: 2,
-    title: "24/7 Monitoring, Anywhere",
-    desc: "Stay connected and monitor your property from your phone anytime, anywhere.",
+    title: "24/7 Urban Surveillance",
+    desc: "Stay on top of everything with smart monitoring across the city.",
     btnText: "Explore Services",
-    img: "https://picsum.photos/id/1015/1920/1080",
+    img: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1920&q=80",
   },
   {
     id: 3,
-    title: "Affordable Smart Security",
-    desc: "Advanced surveillance technology at prices you can trust.",
+    title: "Minimal & Modern",
+    desc: "Sleek cameras, powerful protection — modernize your security system.",
     btnText: "Get a Quote",
-    img: "https://picsum.photos/id/1016/1920/1080",
+    img: "https://images.unsplash.com/photo-1594909122928-92a69f8d3f95?auto=format&fit=crop&w=1920&q=80",
+  },
+  {
+    id: 4,
+    title: "Advanced Indoor Surveillance",
+    desc: "Modern dome cameras with sleek design for seamless indoor monitoring.",
+    btnText: "Learn More",
+    img: "https://images.unsplash.com/photo-1590283602795-5fefcc1c3a36?auto=format&fit=crop&w=1920&q=80",
   },
 ];
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
 
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
+  const nextSlide = () =>
+    setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () =>
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
 
@@ -90,12 +97,11 @@ export default function HeroSlider() {
                 {slides[current].btnText}
               </button>
               <Link
-  to="/signup"
-  className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition"
->
-  Create Account
-</Link>
-
+                to="/signup"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition"
+              >
+                Create Account
+              </Link>
             </motion.div>
           </div>
         </motion.div>

@@ -1,5 +1,7 @@
+// src/pages/Login.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Mail, Lock } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -33,50 +35,70 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-8 w-full max-w-md">
+        {/* Amazon-like Logo */}
+        <div className="flex justify-center mb-4">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+            alt="Logo"
+            className="h-8"
+          />
+        </div>
+
         {/* Heading */}
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Welcome Back 👋
+        <h2 className="text-2xl font-semibold text-gray-800 text-center">
+          Sign In
         </h2>
-        <p className="text-center text-gray-500 mb-6">
-          Please login to your account
+        <p className="text-gray-500 text-center mt-1 text-sm">
+          Welcome back to SafeVision
         </p>
 
-        {/* Form */}
-        <form className="space-y-4" onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
+        {/* Login Form */}
+        <form className="mt-6 space-y-4" onSubmit={handleLogin}>
+          {/* Email */}
+          <div className="flex items-center border rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-orange-500">
+            <Mail className="text-gray-400 mr-2" />
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full outline-none text-sm"
+            />
+          </div>
 
-          <div className="flex items-center justify-between">
-            <label className="flex items-center text-gray-600">
+          {/* Password */}
+          <div className="flex items-center border rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-orange-500">
+            <Lock className="text-gray-400 mr-2" />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full outline-none text-sm"
+            />
+          </div>
+
+          {/* Remember + Forgot */}
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <label className="flex items-center">
               <input type="checkbox" className="mr-2" /> Remember me
             </label>
-            <a href="#" className="text-blue-600 hover:underline text-sm">
+            <a href="/ForgotPassword" className="text-orange-600 hover:underline">
               Forgot Password?
             </a>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 disabled:opacity-70"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md font-medium text-sm transition disabled:opacity-70"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
@@ -89,7 +111,7 @@ const Login = () => {
 
         {/* Social Login */}
         <div className="flex flex-col space-y-3">
-          <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-lg hover:bg-gray-100 transition">
+          <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-md hover:bg-gray-100 transition text-sm">
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
               alt="Google"
@@ -100,9 +122,9 @@ const Login = () => {
         </div>
 
         {/* Sign Up link */}
-        <p className="text-center text-gray-600 mt-6">
+        <p className="text-center text-gray-600 mt-6 text-sm">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-blue-600 hover:underline">
+          <Link to="/signup" className="text-orange-600 hover:underline">
             Create Account
           </Link>
         </p>

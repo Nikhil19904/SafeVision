@@ -1,6 +1,7 @@
 import HeroSlider from "../components/HeroSlider";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+// import HomeCarousel from "../components/HomeCarousel";
 import CCTVInstallation from "../components/CCTVInstallations";
 // Inline Testimonials component
 const Testimonials = () => {
@@ -97,6 +98,7 @@ export default function Home() {
     <div>
       {/* Hero Section */}
       <HeroSlider />
+      {/* <HomeCarousel /> */}
 
       {/* Features Section */}
       <section className="py-12 bg-gray-50">
